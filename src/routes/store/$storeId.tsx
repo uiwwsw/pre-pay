@@ -3,8 +3,8 @@ import { SequentialAnimation } from "@/SequentialAnimation";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useLocation } from "@tanstack/react-router";
 import { useMemo } from "react";
-import { Button, Table } from "rsuite";
-const { Column, HeaderCell, Cell } = Table;
+import { Button } from "rsuite";
+// const { Column, HeaderCell, Cell } = Table;
 
 export const Route = createFileRoute("/store/$storeId")({
   component: RouteComponent,

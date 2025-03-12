@@ -1,4 +1,3 @@
-import { getStore } from "#/store/getStore";
 import { getStoreInfo } from "#/store/getStoreInfo";
 import { SequentialAnimation } from "@/SequentialAnimation";
 import { useQuery } from "@tanstack/react-query";
@@ -30,7 +29,7 @@ function RouteComponent() {
   const {
     control,
     handleSubmit,
-    formState: { errors },
+    // formState: { errors },
   } = useForm<FormState>();
   const onSubmit = async (data: FormState) => {
     console.log(data, "djawldkawdaw");
@@ -70,7 +69,7 @@ function RouteComponent() {
               </InputGroup>
             )}
           />
-          {errors.amount?.message && <p>{errors.amount?.message}</p>}
+          {/* {errors.amount?.message && <p>{errors.amount?.message}</p>} */}
           <div>주문시작</div>
           <button>dddwdw</button>
         </SequentialAnimation>
