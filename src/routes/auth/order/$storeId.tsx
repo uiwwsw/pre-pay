@@ -1,21 +1,11 @@
-import { numberToKorean } from "%/currency";
-import { getDataWithId } from "%/storage";
+import { getStore } from "#/store/getStore";
+import { getStoreInfo } from "#/store/getStoreInfo";
 import { SequentialAnimation } from "@/SequentialAnimation";
-import { useDebounce } from "@/useDebounce";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useLocation } from "@tanstack/react-router";
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import {
-  Button,
-  Form,
-  Input,
-  InputGroup,
-  InputNumber,
-  MaskedInput,
-  Modal,
-  Table,
-} from "rsuite";
+import { Button, Form, Input, InputGroup, Modal } from "rsuite";
 
 export const Route = createFileRoute("/auth/order/$storeId")({
   component: RouteComponent,
@@ -26,12 +16,16 @@ interface FormState {
 }
 function RouteComponent() {
   const location = useLocation();
+  const storeId = useMemo(
+    () => location.pathname.split("/").pop() ?? "",
+    [location]
+  );
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
   const { data } = useQuery({
-    queryKey: ["store", location.pathname],
-    queryFn: () => getDataWithId("store", location.pathname),
-    enabled: !!location.pathname,
+    queryKey: ["store-info", storeId],
+    queryFn: () => getStoreInfo(storeId),
+    enabled: !!storeId,
   });
   const {
     control,
@@ -55,6 +49,7 @@ function RouteComponent() {
           </Button>
         </Modal.Footer>
       </Modal>
+      {JSON.stringify(data)}
       <Form onSubmit={handleSubmit(onSubmit)}>
         <SequentialAnimation>
           <Controller
