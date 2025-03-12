@@ -4,7 +4,6 @@ import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, Input, MaskedInput, Message, toaster } from "rsuite";
-import { createWallet } from "#/wallet/createWallet";
 import { useContext, useEffect } from "react";
 import { FirebaseContext } from "@/FirebaseContext";
 import { SequentialAnimation } from "@/SequentialAnimation";
@@ -22,11 +21,7 @@ function RouteComponent() {
   const { user, userInfo } = useContext(FirebaseContext);
   const { mutateAsync } = useMutation({
     mutationKey: ["user"],
-    mutationFn: (userInfo: UserInfo & { uid: string }) =>
-      Promise.all([
-        createUser(userInfo),
-        createWallet({ uid: userInfo.uid, amount: 0 }),
-      ]),
+    mutationFn: (userInfo: UserInfo & { uid: string }) => createUser(userInfo),
   });
   const onSubmit = async (data: UserInfo) => {
     if (!user?.uid) return;

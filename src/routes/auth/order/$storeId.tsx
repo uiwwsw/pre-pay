@@ -1,8 +1,10 @@
-import { getStoreInfo } from "#/store/getStoreInfo";
+import { getStore } from "#/store/getStore";
+import { getWallet } from "#/wallet/getWallet";
+import { FirebaseContext } from "@/FirebaseContext";
 import { SequentialAnimation } from "@/SequentialAnimation";
-import { useQuery } from "@tanstack/react-query";
+import { useQueries, useQuery } from "@tanstack/react-query";
 import { createFileRoute, useLocation } from "@tanstack/react-router";
-import { useMemo, useState } from "react";
+import { useContext, useMemo, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, Input, InputGroup, Modal } from "rsuite";
 
@@ -19,21 +21,32 @@ function RouteComponent() {
     () => location.pathname.split("/").pop() ?? "",
     [location]
   );
+  const { user } = useContext(FirebaseContext);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const { data } = useQuery({
-    queryKey: ["store-info", storeId],
-    queryFn: () => getStoreInfo(storeId),
-    enabled: !!storeId,
+  const [{ data: storeData }, { data: walletData }] = useQueries({
+    queries: [
+      {
+        queryKey: ["store", storeId],
+        queryFn: () => getStore(storeId),
+        enabled: !!storeId,
+      },
+      {
+        queryKey: ["wallet", storeId],
+        queryFn: () => getWallet(user!.uid, storeId),
+        enabled: !!storeId && !!user?.uid,
+      },
+    ],
   });
   const {
     control,
     handleSubmit,
-    // formState: { errors },
+    formState: { errors },
   } = useForm<FormState>();
   const onSubmit = async (data: FormState) => {
     console.log(data, "djawldkawdaw");
   };
+  console.log(storeData, walletData);
   // const diaplayAmount = useDebounce(numberToKorean(watch("amount")), 1000);
   return (
     <>
@@ -48,8 +61,9 @@ function RouteComponent() {
           </Button>
         </Modal.Footer>
       </Modal>
-      {JSON.stringify(data)}
+
       <Form onSubmit={handleSubmit(onSubmit)}>
+        <p>사용 가능한 금액: {}</p>
         <SequentialAnimation>
           <Controller
             name="amount"
@@ -69,9 +83,8 @@ function RouteComponent() {
               </InputGroup>
             )}
           />
-          {/* {errors.amount?.message && <p>{errors.amount?.message}</p>} */}
-          <div>주문시작</div>
-          <button>dddwdw</button>
+          {errors.amount?.message && <p>{errors.amount?.message}</p>}
+          <button>주문시작</button>
         </SequentialAnimation>
       </Form>
     </>

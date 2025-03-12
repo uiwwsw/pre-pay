@@ -77,8 +77,8 @@ export const subscribeToData = (collectionName: string, callback: (snapshot: Que
     return unsub; // 구독 해제를 위한 반환 함수
 }
 // 특정 조건으로 데이터 검색 함수
-export const findData = async <T>(collectionName: string, fieldName: string, operator: WhereFilterOp, value: unknown) => {
-    const q = query(collection(db, collectionName), where(fieldName, operator, value));
+export const findData = async <T>(collectionName: string, ...queries: [string, WhereFilterOp, unknown][]) => {
+    const q = query(collection(db, collectionName), ...queries.map(([fieldName, operator, value]) => where(fieldName, operator, value)));
     const querySnapshot = await getDocs(q);
     const dataList: (T & FirebaseDocData)[] = [];
     querySnapshot.forEach((doc) => {
@@ -88,6 +88,7 @@ export const findData = async <T>(collectionName: string, fieldName: string, ope
 };
 
 // 필드 값으로 데이터 검색 함수
-export const searchData = <T>(collectionName: string, fieldName: string, value: unknown) => {
-    return findData<T>(collectionName, fieldName, '==', value);
+export const searchData = async <T>(collectionName: string, ...queries: [string, unknown][]) => {
+    const formattedQueries: [string, WhereFilterOp, unknown][] = queries.map(([fieldName, value]) => [fieldName, '==', value]);
+    return findData<T>(collectionName, ...formattedQueries);
 }

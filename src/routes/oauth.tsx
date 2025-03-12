@@ -30,5 +30,5 @@ function RouteComponent() {
       router.history.push("/sign-up");
     }
   }, [user, router]);
-  return <Loader />;
+  return <Loader className="justify-self-center !flex" />;
 }

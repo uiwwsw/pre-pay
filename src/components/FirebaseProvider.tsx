@@ -24,7 +24,9 @@ export const FirebaseProvider = ({ children }: FirebaseProps) => {
 
     return () => unsubscribe();
   }, [mutate]);
-  if (user === undefined || userInfo === undefined) return <Loader />;
+  if (user === undefined || userInfo === undefined)
+    return <Loader className="justify-self-center !flex" />;
+
   return (
     <FirebaseContext.Provider value={{ userInfo, user }}>
       {children}
