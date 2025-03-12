@@ -120,9 +120,7 @@ function RouteComponent() {
             />
             {errors.cellPhone?.message && <p>{errors.cellPhone.message}</p>}
           </div>
-          <Button className="w-full" type="submit">
-            회원가입 완료하기
-          </Button>
+          <Button type="submit">회원가입 완료하기</Button>
         </SequentialAnimation>
       </Form>
     </>

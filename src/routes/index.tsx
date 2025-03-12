@@ -25,7 +25,6 @@ function RouteComponent() {
     <SequentialAnimation isLoading={isLoading}>
       <SelectPicker
         onChange={handleSubmit}
-        className="w-full"
         placeholder="가게를 고르세요"
         data={storeList}
       />

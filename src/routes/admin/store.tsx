@@ -87,9 +87,7 @@ function RouteComponent() {
           />
           {errors.address?.message && <p>{errors.address.message}</p>}
         </div>
-        <Button className="w-full" type="submit">
-          상점 추가하기
-        </Button>
+        <Button type="submit">상점 추가하기</Button>
       </SequentialAnimation>
     </Form>
   );
