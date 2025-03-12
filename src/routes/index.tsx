@@ -11,11 +11,11 @@ export const Route = createFileRoute("/")({
 function RouteComponent() {
   const router = useRouter();
   const { data, isLoading } = useQuery({
-    queryKey: ["store"],
+    queryKey: ["stores"],
     queryFn: getStores,
   });
   const storeList = useMemo(
-    () => data?.map((x) => ({ value: x.name, label: x.name })) ?? [],
+    () => data?.map((x) => ({ value: x.id, label: x.name })) ?? [],
     [data]
   );
   const handleSubmit = (value: string | null) => {
@@ -25,7 +25,7 @@ function RouteComponent() {
     <SequentialAnimation isLoading={isLoading}>
       <SelectPicker
         onChange={handleSubmit}
-        className="m-auto"
+        className="w-full"
         placeholder="가게를 고르세요"
         data={storeList}
       />

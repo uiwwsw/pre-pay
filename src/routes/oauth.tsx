@@ -3,7 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { signInForKakao } from "#/auth/signIn";
 import { Loader } from "rsuite";
-import { getUser } from "#/userInfo/getUser";
+import { getUser } from "#/user/getUser";
 export const Route = createFileRoute("/oauth")({
   component: RouteComponent,
 });
@@ -11,9 +11,9 @@ function RouteComponent() {
   const params = new URL(document.URL).searchParams;
   const code = params.get("code");
   const { data } = useQuery({
+    enabled: !!code,
     queryKey: ["oauth"],
     queryFn: () => signInForKakao({ code }),
-    select: (data) => data,
   });
   const { data: user } = useQuery({
     enabled: !!data?.uid,
@@ -24,7 +24,6 @@ function RouteComponent() {
 
   useEffect(() => {
     if (user === undefined) return;
-    console.log(user);
     if (user) {
       router.history.push("/");
     } else {

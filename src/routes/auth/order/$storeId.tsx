@@ -17,7 +17,7 @@ import {
   Table,
 } from "rsuite";
 
-export const Route = createFileRoute("/order/$storeId")({
+export const Route = createFileRoute("/auth/order/$storeId")({
   component: RouteComponent,
 });
 

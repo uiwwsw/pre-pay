@@ -1,15 +1,16 @@
-import { UserInfo } from "#/userInfo/domain";
+import { UserInfo } from "#/user/domain";
+import { User } from "firebase/auth";
 import {
     createContext,
     useContext,
 } from "react";
 export interface FirebaseState {
     userInfo?: UserInfo | null;
-    uid?: string | null;
+    user?: User | null;
 }
 export const FirebaseContext = createContext<FirebaseState>({
     userInfo: undefined,
-    uid: null
+    user: undefined
 });
 
 export const useFirebase = () => {

@@ -32,7 +32,7 @@ export const SequentialAnimation = ({
               transform: "translateY(0%)",
               opacity: 1,
             }}
-            className="flex flex-col"
+            className="flex flex-col [&+&]:mt-2"
           >
             {item}
           </motion.div>

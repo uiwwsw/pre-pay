@@ -1,5 +1,6 @@
 import { collection, addDoc, DocumentData, getDocs, onSnapshot, QuerySnapshot, query, where, WhereFilterOp, doc, getDoc, updateDoc, setDoc } from "firebase/firestore";
 import { db } from "./firebase";
+import { FirebaseDocData } from "#/firebase/domain";
 
 export const addData = async (collectionName: string, data: DocumentData) => {
     try {
@@ -34,11 +35,11 @@ export const updateData = async (collectionName: string, documentId: string, dat
 }
 export const readData = async <T>(collectionName: string) => {
     const querySnapshot = await getDocs(collection(db, collectionName));
-    const dataList: Array<Record<string, string>> = [];
+    const dataList: (T & FirebaseDocData)[] = [];
     querySnapshot.forEach((doc) => {
-        dataList.push({ id: doc.id, ...doc.data() });
+        dataList.push({ id: doc.id, ...doc.data() } as T & FirebaseDocData);
     });
-    return dataList as T[];
+    return dataList
 }
 
 export const getDataWithId = async <T>(collectionName: string, documentId: string) => {
@@ -46,7 +47,7 @@ export const getDataWithId = async <T>(collectionName: string, documentId: strin
         const docRef = doc(db, collectionName, documentId);
         const docSnap = await getDoc(docRef);
         if (docSnap.exists()) {
-            return docSnap.data() as T;
+            return docSnap.data() as T & FirebaseDocData;
         } else {
             console.log("No such document!");
             return null;
@@ -79,14 +80,14 @@ export const subscribeToData = (collectionName: string, callback: (snapshot: Que
 export const findData = async <T>(collectionName: string, fieldName: string, operator: WhereFilterOp, value: unknown) => {
     const q = query(collection(db, collectionName), where(fieldName, operator, value));
     const querySnapshot = await getDocs(q);
-    const dataList: Array<Record<string, unknown>> = [];
+    const dataList: (T & FirebaseDocData)[] = [];
     querySnapshot.forEach((doc) => {
-        dataList.push({ id: doc.id, ...doc.data() });
+        dataList.push({ id: doc.id, ...doc.data() } as T & FirebaseDocData);
     });
-    return dataList as T[];
+    return dataList;
 };
 
 // 필드 값으로 데이터 검색 함수
-export const searchData = async (collectionName: string, fieldName: string, value: unknown) => {
-    return await findData(collectionName, fieldName, '==', value);
+export const searchData = <T>(collectionName: string, fieldName: string, value: unknown) => {
+    return findData<T>(collectionName, fieldName, '==', value);
 }

@@ -2,9 +2,9 @@ import { auth } from "%/firebase";
 import { onAuthStateChanged, User } from "firebase/auth";
 import { ReactNode, useLayoutEffect, useState } from "react";
 import { FirebaseContext, FirebaseState } from "./FirebaseContext";
+import { useMutation } from "@tanstack/react-query";
+import { getUser } from "#/user/getUser";
 import { Loader } from "rsuite";
-import { useQuery } from "@tanstack/react-query";
-import { getUser } from "#/userInfo/getUser";
 
 interface FirebaseProps extends FirebaseState {
   children?: ReactNode;
@@ -12,19 +12,21 @@ interface FirebaseProps extends FirebaseState {
 
 export const FirebaseProvider = ({ children }: FirebaseProps) => {
   const [user, setUser] = useState<User | null>();
-  const { data: userInfo } = useQuery({
-    enabled: !!user?.uid,
-    queryKey: ["user"],
-    queryFn: () => getUser(user!.uid),
+  const { data: userInfo, mutate } = useMutation({
+    mutationKey: ["user"],
+    mutationFn: (uid?: string) => getUser(uid),
   });
   useLayoutEffect(() => {
-    onAuthStateChanged(auth, (user: User | null) => {
+    const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {
       setUser(user);
+      mutate(user?.uid);
     });
-  }, []);
-  if (user === undefined) return <Loader className="m-auto" />;
+
+    return () => unsubscribe();
+  }, [mutate]);
+  if (user === undefined || userInfo === undefined) return <Loader />;
   return (
-    <FirebaseContext.Provider value={{ userInfo, uid: user?.uid }}>
+    <FirebaseContext.Provider value={{ userInfo, user }}>
       {children}
     </FirebaseContext.Provider>
   );

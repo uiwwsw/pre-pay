@@ -1,4 +1,4 @@
-import { getDataWithId } from "%/storage";
+import { getStore } from "#/store/getStore";
 import { SequentialAnimation } from "@/SequentialAnimation";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useLocation } from "@tanstack/react-router";
@@ -18,7 +18,7 @@ function RouteComponent() {
   );
   const { data } = useQuery({
     queryKey: ["store", storeId],
-    queryFn: () => getDataWithId("store", storeId),
+    queryFn: () => getStore(storeId),
     enabled: !!storeId,
   });
   console.log(data);
@@ -32,7 +32,7 @@ function RouteComponent() {
         <dt>주소</dt>
         <dd>{data?.address}</dd>
       </dl>
-      <Button href={`/order/${storeId}`}>주문하기</Button>
+      <Button href={`/auth/order/${storeId}`}>주문하기</Button>
     </SequentialAnimation>
   );
 }
