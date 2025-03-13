@@ -80,6 +80,7 @@ function RouteComponent() {
                 data={
                   data?.map((x) => ({ value: x.id, label: x.cellPhone })) ?? []
                 }
+                className="w-full"
                 placeholder="오너의 폰번호를 입력해주세요."
                 onChange={(option: string | null) => field.onChange(option)}
               />
