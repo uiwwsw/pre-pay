@@ -14,7 +14,7 @@ function RouteComponent() {
     enabled: !!code,
     queryKey: ["oauth"],
     queryFn: () => signInForKakao({ code }),
-    staleTime: 10000,
+    staleTime: Infinity,
   });
   const { data: user } = useQuery({
     enabled: !!data?.uid,
