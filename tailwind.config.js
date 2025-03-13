@@ -13,7 +13,7 @@ export default {
         screen: 'calc(var(--vh, 1vh) * 100)', // --vh가 없는 경우 1vh로 대체
       },
       fontFamily: {
-        pretendard: ["Pretendard Variable", 'Pretendard', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 'sans-serif']
+        suite: ['SUITE Variable', '-apple-system', 'BlinkMacSystemFont', 'system-ui', 'Roboto', "Helvetica Neue", "Segoe UI", "Apple SD Gothic Neo", "Noto Sans KR", "Malgun Gothic", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", 'sans-serif']
       },
     },
   },

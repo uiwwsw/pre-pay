@@ -1,10 +1,12 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
 @font-face {
-  font-family: "Pretendard Variable";
-  font-weight: 45 920;
-  font-style: normal;
-  font-display: swap;
-  src: url("/woff2/PretendardVariable.woff2") format("woff2-variations");
+	font-family: 'SUITE Variable';
+	font-weight: 300 900;
+	src: url('/woff2/SUITE-Variable.woff2') format('woff2-variations');
+}
+body {
+  @apply !font-suite;
 }

@@ -1,6 +1,6 @@
-
 export interface Wallet {
-    amount: number;
-    uid: string;
-    storeId: string;
+  amount: number;
+  uid: string;
+  storeId: string;
+  name?: string;
 }

@@ -2,9 +2,9 @@ import { getStore } from "#/store/getStore";
 import { getWallet } from "#/wallet/getWallet";
 import { FirebaseContext } from "@/FirebaseContext";
 import { SequentialAnimation } from "@/SequentialAnimation";
-import { useQueries, useQuery } from "@tanstack/react-query";
+import { useQueries } from "@tanstack/react-query";
 import { createFileRoute, useLocation } from "@tanstack/react-router";
-import { useContext, useMemo, useState } from "react";
+import { useContext, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, Input, InputGroup, Modal } from "rsuite";
 
@@ -21,10 +21,11 @@ function RouteComponent() {
     () => location.pathname.split("/").pop() ?? "",
     [location]
   );
+  const formstateRef = useRef<FormState>();
   const { user } = useContext(FirebaseContext);
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const [{ data: storeData }, { data: walletData }] = useQueries({
+  const [{ data: storeData }, { data: walletsData }] = useQueries({
     queries: [
       {
         queryKey: ["store", storeId],
@@ -43,48 +44,73 @@ function RouteComponent() {
     handleSubmit,
     formState: { errors },
   } = useForm<FormState>();
-  const onSubmit = async (data: FormState) => {
-    console.log(data, "djawldkawdaw");
+  const onOpen = (data: FormState) => {
+    formstateRef.current = data;
+
+    setOpen(true);
   };
-  console.log(storeData, walletData);
+  const onSubmit = async (data: FormState) => {
+    console.log("!@!@!#$!@$#$@", data);
+    // setOpen(true);
+  };
+  const ableAmount = useMemo(
+    () => walletsData?.reduce((acc, wallet) => wallet.amount + acc, 0) ?? 0,
+    [walletsData]
+  );
+  // console.log(walletsData?.[0]?.created.toDate());
   // const diaplayAmount = useDebounce(numberToKorean(watch("amount")), 1000);
   return (
     <>
-      <Modal open={open} onClose={handleClose}>
-        <Modal.Body>사용할 금액이</Modal.Body>
+      <Modal backdrop="static" open={open} onClose={handleClose}>
+        <Modal.Header>
+          <Modal.Title>
+            [{storeData?.name}]에 사용할 금액은{" "}
+            {(+(formstateRef.current?.amount ?? "0")).toLocaleString()}원
+            입니다.
+          </Modal.Title>
+        </Modal.Header>
+
+        <Modal.Body className="text-black">지불하시겠습니까?</Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleClose} appearance="primary">
-            Ok
+          <Button onClick={handleSubmit(onSubmit)} appearance="primary">
+            지불하기
           </Button>
           <Button onClick={handleClose} appearance="subtle">
-            Cancel
+            취소
           </Button>
         </Modal.Footer>
       </Modal>
-
-      <Form onSubmit={handleSubmit(onSubmit)}>
-        <p>사용 가능한 금액: {}</p>
+      <Form>
         <SequentialAnimation>
-          <Controller
-            name="amount"
-            control={control}
-            rules={{
-              required: { value: true, message: "이름을 입력하세요" },
-              validate: (v) => v < 3000 || "가격이 너무 높아유",
-            }}
-            render={({ field }) => (
-              <InputGroup inside>
-                <InputGroup.Addon>₩</InputGroup.Addon>
-                <Input
-                  type="number"
-                  onChange={(value: string) => field.onChange(value)}
-                />
-                <InputGroup.Addon>원</InputGroup.Addon>
-              </InputGroup>
-            )}
-          />
-          {errors.amount?.message && <p>{errors.amount?.message}</p>}
-          <button>주문시작</button>
+          <p>사용 가능한 금액: {ableAmount.toLocaleString()}</p>
+          <div>
+            <Controller
+              name="amount"
+              control={control}
+              rules={{
+                validate: (v) =>
+                  (v <= ableAmount && v > 0) || "충전된 금액이 부족해요",
+              }}
+              render={({ field }) => (
+                <InputGroup inside>
+                  <InputGroup.Addon>₩</InputGroup.Addon>
+                  <Input
+                    type="number"
+                    onChange={(value: string) => field.onChange(value)}
+                  />
+                  <InputGroup.Addon>원</InputGroup.Addon>
+                </InputGroup>
+              )}
+            />
+            {errors.amount?.message && <p>{errors.amount?.message}</p>}
+          </div>
+          <Button
+            onClick={handleSubmit(onOpen)}
+            appearance="primary"
+            color="violet"
+          >
+            주문시작
+          </Button>
         </SequentialAnimation>
       </Form>
     </>
