@@ -4,17 +4,21 @@ import { useEffect } from "react";
 import { signInForKakao } from "#/auth/signIn";
 import { Loader } from "rsuite";
 import { getUser } from "#/user/getUser";
+import { useCookies } from "react-cookie";
 export const Route = createFileRoute("/oauth")({
   component: RouteComponent,
 });
 function RouteComponent() {
+  const [cookie, setCookie] = useCookies(["code"]);
   const params = new URL(document.URL).searchParams;
   const code = params.get("code");
   const { data } = useQuery({
-    enabled: !!code,
     queryKey: ["oauth"],
-    queryFn: () => signInForKakao({ code }),
-    staleTime: Infinity,
+    queryFn: () => {
+      if (cookie.code === code) return;
+      setCookie("code", code);
+      return signInForKakao({ code });
+    },
   });
   const { data: user } = useQuery({
     enabled: !!data?.uid,
