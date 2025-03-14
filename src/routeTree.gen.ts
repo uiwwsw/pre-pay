@@ -19,7 +19,6 @@ import { Route as AuthImport } from './routes/auth'
 import { Route as AdminImport } from './routes/admin'
 import { Route as IndexImport } from './routes/index'
 import { Route as StoreStoreIdImport } from './routes/store/$storeId'
-import { Route as ManagerStoreIdImport } from './routes/manager/$storeId'
 import { Route as AuthRequestImport } from './routes/auth/request'
 import { Route as AuthMyImport } from './routes/auth/my'
 import { Route as AdminStoreImport } from './routes/admin/store'
@@ -76,12 +75,6 @@ const StoreStoreIdRoute = StoreStoreIdImport.update({
   id: '/store/$storeId',
   path: '/store/$storeId',
   getParentRoute: () => rootRoute,
-} as any)
-
-const ManagerStoreIdRoute = ManagerStoreIdImport.update({
-  id: '/$storeId',
-  path: '/$storeId',
-  getParentRoute: () => ManagerRoute,
 } as any)
 
 const AuthRequestRoute = AuthRequestImport.update({
@@ -200,13 +193,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRequestImport
       parentRoute: typeof AuthImport
     }
-    '/manager/$storeId': {
-      id: '/manager/$storeId'
-      path: '/$storeId'
-      fullPath: '/manager/$storeId'
-      preLoaderRoute: typeof ManagerStoreIdImport
-      parentRoute: typeof ManagerImport
-    }
     '/store/$storeId': {
       id: '/store/$storeId'
       path: '/store/$storeId'
@@ -277,29 +263,17 @@ const AuthRouteChildren: AuthRouteChildren = {
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
 
-interface ManagerRouteChildren {
-  ManagerStoreIdRoute: typeof ManagerStoreIdRoute
-}
-
-const ManagerRouteChildren: ManagerRouteChildren = {
-  ManagerStoreIdRoute: ManagerStoreIdRoute,
-}
-
-const ManagerRouteWithChildren =
-  ManagerRoute._addFileChildren(ManagerRouteChildren)
-
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
-  '/manager': typeof ManagerRouteWithChildren
+  '/manager': typeof ManagerRoute
   '/oauth': typeof OauthRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/admin/store': typeof AdminStoreRoute
   '/auth/my': typeof AuthMyRoute
   '/auth/request': typeof AuthRequestRoute
-  '/manager/$storeId': typeof ManagerStoreIdRoute
   '/store/$storeId': typeof StoreStoreIdRoute
   '/auth/order/$storeId': typeof AuthOrderStoreIdRoute
   '/auth/history': typeof AuthHistoryIndexRoute
@@ -311,14 +285,13 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
-  '/manager': typeof ManagerRouteWithChildren
+  '/manager': typeof ManagerRoute
   '/oauth': typeof OauthRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/admin/store': typeof AdminStoreRoute
   '/auth/my': typeof AuthMyRoute
   '/auth/request': typeof AuthRequestRoute
-  '/manager/$storeId': typeof ManagerStoreIdRoute
   '/store/$storeId': typeof StoreStoreIdRoute
   '/auth/order/$storeId': typeof AuthOrderStoreIdRoute
   '/auth/history': typeof AuthHistoryIndexRoute
@@ -331,14 +304,13 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/auth': typeof AuthRouteWithChildren
-  '/manager': typeof ManagerRouteWithChildren
+  '/manager': typeof ManagerRoute
   '/oauth': typeof OauthRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
   '/admin/store': typeof AdminStoreRoute
   '/auth/my': typeof AuthMyRoute
   '/auth/request': typeof AuthRequestRoute
-  '/manager/$storeId': typeof ManagerStoreIdRoute
   '/store/$storeId': typeof StoreStoreIdRoute
   '/auth/order/$storeId': typeof AuthOrderStoreIdRoute
   '/auth/history/': typeof AuthHistoryIndexRoute
@@ -359,7 +331,6 @@ export interface FileRouteTypes {
     | '/admin/store'
     | '/auth/my'
     | '/auth/request'
-    | '/manager/$storeId'
     | '/store/$storeId'
     | '/auth/order/$storeId'
     | '/auth/history'
@@ -377,7 +348,6 @@ export interface FileRouteTypes {
     | '/admin/store'
     | '/auth/my'
     | '/auth/request'
-    | '/manager/$storeId'
     | '/store/$storeId'
     | '/auth/order/$storeId'
     | '/auth/history'
@@ -395,7 +365,6 @@ export interface FileRouteTypes {
     | '/admin/store'
     | '/auth/my'
     | '/auth/request'
-    | '/manager/$storeId'
     | '/store/$storeId'
     | '/auth/order/$storeId'
     | '/auth/history/'
@@ -408,7 +377,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   AuthRoute: typeof AuthRouteWithChildren
-  ManagerRoute: typeof ManagerRouteWithChildren
+  ManagerRoute: typeof ManagerRoute
   OauthRoute: typeof OauthRoute
   SignInRoute: typeof SignInRoute
   SignUpRoute: typeof SignUpRoute
@@ -419,7 +388,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   AuthRoute: AuthRouteWithChildren,
-  ManagerRoute: ManagerRouteWithChildren,
+  ManagerRoute: ManagerRoute,
   OauthRoute: OauthRoute,
   SignInRoute: SignInRoute,
   SignUpRoute: SignUpRoute,
@@ -467,10 +436,7 @@ export const routeTree = rootRoute
       ]
     },
     "/manager": {
-      "filePath": "manager.tsx",
-      "children": [
-        "/manager/$storeId"
-      ]
+      "filePath": "manager.tsx"
     },
     "/oauth": {
       "filePath": "oauth.tsx"
@@ -492,10 +458,6 @@ export const routeTree = rootRoute
     "/auth/request": {
       "filePath": "auth/request.tsx",
       "parent": "/auth"
-    },
-    "/manager/$storeId": {
-      "filePath": "manager/$storeId.tsx",
-      "parent": "/manager"
     },
     "/store/$storeId": {
       "filePath": "store/$storeId.tsx"

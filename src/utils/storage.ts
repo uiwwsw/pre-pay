@@ -4,7 +4,6 @@ import {
   DocumentData,
   getDocs,
   onSnapshot,
-  QuerySnapshot,
   query,
   where,
   WhereFilterOp,

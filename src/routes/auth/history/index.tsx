@@ -6,7 +6,7 @@ import { SequentialAnimation } from "@/SequentialAnimation";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { format } from "date-fns";
-import { useContext, useMemo } from "react";
+import { useContext } from "react";
 import { Placeholder, Table } from "rsuite";
 
 export const Route = createFileRoute("/auth/history/")({
