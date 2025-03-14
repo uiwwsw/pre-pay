@@ -1,12 +1,27 @@
+import { addOrder } from "#/order/addOrder";
+import { Order } from "#/order/domain";
 import { getStore } from "#/store/getStore";
-import { getWallet } from "#/wallet/getWallet";
+import { updateWallet } from "#/wallet/updateWallet";
 import { FirebaseContext } from "@/FirebaseContext";
 import { SequentialAnimation } from "@/SequentialAnimation";
-import { useQueries } from "@tanstack/react-query";
-import { createFileRoute, useLocation } from "@tanstack/react-router";
-import { useContext, useMemo, useRef, useState } from "react";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  createFileRoute,
+  useLocation,
+  useRouter,
+} from "@tanstack/react-router";
+
+import { useContext, useEffect, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { Button, Form, Input, InputGroup, Modal } from "rsuite";
+import {
+  Button,
+  Form,
+  Input,
+  InputGroup,
+  Message,
+  Modal,
+  toaster,
+} from "rsuite";
 
 export const Route = createFileRoute("/auth/order/$storeId")({
   component: RouteComponent,
@@ -21,44 +36,75 @@ function RouteComponent() {
     () => location.pathname.split("/").pop() ?? "",
     [location]
   );
+  const router = useRouter();
   const formstateRef = useRef<FormState>();
-  const { user } = useContext(FirebaseContext);
+  const { user, myWallets } = useContext(FirebaseContext);
+  const currentWallet = useMemo(
+    () => myWallets?.find((wallet) => wallet.storeId === storeId),
+    [myWallets, storeId]
+  );
+  const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const [{ data: storeData }, { data: walletsData }] = useQueries({
-    queries: [
-      {
-        queryKey: ["store", storeId],
-        queryFn: () => getStore(storeId),
-        enabled: !!storeId,
-      },
-      {
-        queryKey: ["wallet", storeId],
-        queryFn: () => getWallet(user!.uid, storeId),
-        enabled: !!storeId && !!user?.uid,
-      },
-    ],
+  const { data: storeData } = useQuery({
+    queryKey: ["store", storeId],
+    queryFn: () => getStore(storeId),
+    enabled: !!storeId,
+  });
+  const { mutate } = useMutation({
+    mutationKey: ["order", storeId],
+    mutationFn: ({
+      walletAmount,
+      ...order
+    }: Order & { walletAmount: number }) =>
+      Promise.all([
+        updateWallet({
+          id: order.walletId,
+          amount: walletAmount - order.amount,
+        }),
+        addOrder(order),
+      ]),
   });
   const {
     control,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormState>();
+    reset,
+  } = useForm<FormState>({ defaultValues: { amount: 0 } });
   const onOpen = (data: FormState) => {
     formstateRef.current = data;
 
     setOpen(true);
   };
   const onSubmit = async (data: FormState) => {
-    console.log("!@!@!#$!@$#$@", data);
+    if (!storeData || !currentWallet || !user) return;
+    mutate({
+      walletAmount: currentWallet.amount,
+      amount: data.amount,
+      confirm: false,
+      storeName: storeData.name,
+      storeId,
+      walletName: currentWallet.name,
+      walletId: currentWallet.id,
+      uid: user.uid,
+    });
+    setOpen(false);
+    reset();
+    toaster.push(
+      <Message showIcon type="info" closable>
+        {data.amount}를 지불했어요
+      </Message>
+    );
+    queryClient.invalidateQueries({ queryKey: ["my-wallets"] });
+
     // setOpen(true);
   };
-  const ableAmount = useMemo(
-    () => walletsData?.reduce((acc, wallet) => wallet.amount + acc, 0) ?? 0,
-    [walletsData]
-  );
+  const ableAmount = useMemo(() => currentWallet?.amount ?? 0, [currentWallet]);
   // console.log(walletsData?.[0]?.created.toDate());
   // const diaplayAmount = useDebounce(numberToKorean(watch("amount")), 1000);
+  useEffect(() => {
+    if (!currentWallet) router.history.back();
+  }, [currentWallet]);
   return (
     <>
       <Modal backdrop="static" open={open} onClose={handleClose}>
@@ -88,13 +134,15 @@ function RouteComponent() {
               name="amount"
               control={control}
               rules={{
+                required: { value: true, message: "금액을 입력해주세요." },
                 validate: (v) =>
-                  (v <= ableAmount && v > 0) || "충전된 금액이 부족해요",
+                  (v <= ableAmount && v > 0) || "금액을 확인해주세요.",
               }}
               render={({ field }) => (
                 <InputGroup inside>
                   <InputGroup.Addon>₩</InputGroup.Addon>
                   <Input
+                    value={field.value}
                     type="number"
                     onChange={(value: string) => field.onChange(value)}
                   />

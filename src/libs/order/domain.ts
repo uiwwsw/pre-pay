@@ -1,9 +1,13 @@
 export interface Order {
-    amount: number
-    created: Date
-    uid: string;
+  amount: number;
+  uid: string;
 
-    managerId: string;
-    storeId: string;
-    walletId: string;
+  // managerId?: string;
+  // managerName?: string;
+  storeName: string;
+  storeId: string;
+  walletName: string;
+  walletId: string;
+
+  confirm: boolean;
 }

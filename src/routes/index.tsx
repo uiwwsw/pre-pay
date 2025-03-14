@@ -24,6 +24,8 @@ function RouteComponent() {
   return (
     <SequentialAnimation isLoading={isLoading}>
       <SelectPicker
+        // appearance="primary"
+        // color="violet"
         onChange={handleSubmit}
         placeholder="가게를 고르세요"
         data={storeList}

@@ -2,7 +2,7 @@ import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { signInForKakao } from "#/auth/signIn";
-import { Loader } from "rsuite";
+import { Loader, Message, toaster } from "rsuite";
 import { getUser } from "#/user/getUser";
 import { useCookies } from "react-cookie";
 export const Route = createFileRoute("/oauth")({
@@ -30,6 +30,11 @@ function RouteComponent() {
   useEffect(() => {
     if (user === undefined) return;
     if (user) {
+      toaster.push(
+        <Message showIcon type="info" closable>
+          로그인 성공! 환영합니다! 💕✨
+        </Message>
+      );
       router.history.push("/");
     } else {
       router.history.push("/sign-up");
