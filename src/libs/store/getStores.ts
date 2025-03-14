@@ -1,9 +1,9 @@
-import { readData } from "%/storage";
+import { searchData } from "%/storage";
 import { Store } from "./domain";
 
-export const getStores = async () => {
-    const res = (await readData<Store>("stores"));
-    if (res) return res;
+export const getStores = async (uid: string) => {
+  const res = await searchData<Store>("stores", ["ownerId", uid]);
+  if (res) return res;
 
-    return null
-}
+  return null;
+};

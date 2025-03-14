@@ -1,19 +1,5 @@
-import { getNew } from "#/order/getNew";
-import { useQuery } from "@tanstack/react-query";
-import { useContext, useMemo } from "react";
-import { Badge, Button } from "rsuite";
-import { FirebaseContext } from "./FirebaseContext";
+import { Button } from "rsuite";
 export const Nav = () => {
-  const { user } = useContext(FirebaseContext);
-  const { data } = useQuery({
-    enabled: !!user?.uid,
-    queryKey: ["notification"],
-    queryFn: () => getNew(user!.uid),
-  });
-  const count = useMemo(
-    () => data?.reduce((a, v) => v.length + a, 1) ?? 0,
-    [data]
-  );
   return (
     <nav
       className="fixed bottom-0 left-0 right-0 px-10 text-black flex"
@@ -39,22 +25,20 @@ export const Nav = () => {
           </svg>
         </Button>
         <Button className="py-2 px-3 h-11" href="/auth/my">
-          <Badge content={count} className="align-middle">
-            <svg
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 24 24"
-              strokeWidth={1.5}
-              stroke="currentColor"
-              className="size-6"
-            >
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
-              />
-            </svg>
-          </Badge>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={1.5}
+            stroke="currentColor"
+            className="size-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M15.75 6a3.75 3.75 0 1 1-7.5 0 3.75 3.75 0 0 1 7.5 0ZM4.501 20.118a7.5 7.5 0 0 1 14.998 0A17.933 17.933 0 0 1 12 21.75c-2.676 0-5.216-.584-7.499-1.632Z"
+            />
+          </svg>
         </Button>
       </div>
     </nav>

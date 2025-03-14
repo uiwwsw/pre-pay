@@ -1,4 +1,4 @@
-export interface Order {
+export interface Log {
   amount: number;
   uid: string;
 
@@ -10,4 +10,5 @@ export interface Order {
   walletId: string;
 
   confirm: boolean;
+  recharge?: true;
 }

@@ -87,26 +87,25 @@ export const getDataWithId = async <T>(
   }
 };
 
-export const subscribeToData = (
-  collectionName: string,
-  callback: (snapshot: QuerySnapshot) => unknown
+export const subscribeToData = <T>(
+  documentId: string,
+  callback: React.Dispatch<React.SetStateAction<T | undefined>>
 ) => {
-  const unsub = onSnapshot(collection(db, collectionName), (snapshot) => {
-    snapshot.docChanges().forEach((change) => {
-      if (change.type === "added") {
-        console.log("New data: ", change.doc.data());
-      }
-      if (change.type === "modified") {
-        console.log("Modified data: ", change.doc.data());
-      }
-      if (change.type === "removed") {
-        console.log("Removed data: ", change.doc.data());
+  try {
+    const docRef = doc(db, "subscribe", documentId);
+
+    const sub = onSnapshot(docRef, (doc) => {
+      if (doc.exists()) {
+        callback(doc.data() as T);
+      } else {
+        console.error("No such document!");
       }
     });
-    callback(snapshot);
-  });
-
-  return unsub; // 구독 해제를 위한 반환 함수
+    return sub;
+  } catch (error) {
+    console.error("Error fetching document: ", error);
+    throw error;
+  }
 };
 // 특정 조건으로 데이터 검색 함수
 export const findData = async <T>(

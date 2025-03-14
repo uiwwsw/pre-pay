@@ -1,5 +1,5 @@
-import { addOrder } from "#/order/addOrder";
-import { Order } from "#/order/domain";
+import { Log } from "#/log/domain";
+import { pay } from "#/log/pay";
 import { getStore } from "#/store/getStore";
 import { updateWallet } from "#/wallet/updateWallet";
 import { FirebaseContext } from "@/FirebaseContext";
@@ -53,16 +53,13 @@ function RouteComponent() {
   });
   const { mutate } = useMutation({
     mutationKey: ["order", storeId],
-    mutationFn: ({
-      walletAmount,
-      ...order
-    }: Order & { walletAmount: number }) =>
+    mutationFn: ({ walletAmount, ...order }: Log & { walletAmount: number }) =>
       Promise.all([
         updateWallet({
           id: order.walletId,
           amount: walletAmount - order.amount,
         }),
-        addOrder(order),
+        pay(order),
       ]),
   });
   const {

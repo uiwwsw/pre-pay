@@ -1,11 +1,7 @@
-import { Order } from "#/order/domain";
+// import { Order } from "#/log/domain";
 
 export interface Store {
-    address: string;
-    name: string
-    ownerId: string
-}
-export interface StoreInfo extends Store {
-    recharges: Order[]
-    orders: Order[]
+  address: string;
+  name: string;
+  ownerId: string;
 }

@@ -1,4 +1,4 @@
-import { getStores } from "#/store/getStores";
+import { getAllStores } from "#/store/getAllStores";
 import { SequentialAnimation } from "@/SequentialAnimation";
 import { useQuery } from "@tanstack/react-query";
 import { createFileRoute, useRouter } from "@tanstack/react-router";
@@ -11,8 +11,8 @@ export const Route = createFileRoute("/")({
 function RouteComponent() {
   const router = useRouter();
   const { data, isLoading } = useQuery({
-    queryKey: ["stores"],
-    queryFn: getStores,
+    queryKey: ["all-stores"],
+    queryFn: getAllStores,
   });
   const storeList = useMemo(
     () => data?.map((x) => ({ value: x.id, label: x.name })) ?? [],
