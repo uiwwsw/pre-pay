@@ -10,7 +10,7 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import { useContext, useMemo, useState } from "react";
-import { Button, Loader, Modal } from "rsuite";
+import { Button, Modal } from "rsuite";
 // const { Column, HeaderCell, Cell } = Table;
 
 export const Route = createFileRoute("/store/$storeId")({
@@ -28,7 +28,7 @@ function RouteComponent() {
   );
   const { user } = useContext(FirebaseContext);
   const { myWallets } = useContext(FirebaseContext);
-  const { data, isPending } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["store", storeId],
     queryFn: () => getStore(storeId),
     staleTime: Infinity,
@@ -58,7 +58,8 @@ function RouteComponent() {
   };
   const handleClose = () => setOpen(false);
   const handleOpen = () => setOpen(true);
-  if (isPending) return <Loader className="justify-self-center !flex" />;
+  const handleApply = () => router.history.push(`/auth/order/${storeId}`);
+  // if (isPending) return <Loader className="justify-self-center !flex" />;
   return (
     <>
       <Modal backdrop="static" open={open} onClose={handleClose}>
@@ -81,19 +82,20 @@ function RouteComponent() {
       <SequentialAnimation>
         <dl>
           <dt>상호</dt>
-          <dd>{data?.name}</dd>
+          <dd className={isLoading ? "bg-white w-24" : ""}>
+            {data?.name ?? "상호"}
+          </dd>
         </dl>
         <dl>
           <dt>주소</dt>
-          <dd>{data?.address}</dd>
+          <dd className={isLoading ? "bg-white w-64" : ""}>
+            {data?.address ?? "주소"}
+          </dd>
         </dl>
+
         {currentWallet ? (
-          <Button
-            href={`/auth/order/${storeId}`}
-            appearance="primary"
-            color="violet"
-          >
-            주문하기
+          <Button onClick={handleApply} appearance="primary" color="violet">
+            주문하러 가기
           </Button>
         ) : (
           <Button onClick={handleOpen} appearance="primary" color="red">

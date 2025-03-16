@@ -1,9 +1,17 @@
+import { useRouter } from "@tanstack/react-router";
 import { Button } from "rsuite";
 export const Nav = () => {
+  const router = useRouter();
+  const handleGoMain = () => router.history.push("/");
+  const handleGoMy = () => router.history.push("/auth/my");
   return (
-    <nav className="fixed backdrop-blur-sm bottom-0 left-0 right-0 px-10 text-black flex max-w-lg m-auto">
+    <nav className="fixed bg-black bg-opacity-30 z-10 backdrop-blur-sm bottom-0 left-0 right-0 px-10 text-black flex max-w-lg m-auto">
       <div className="flex m-auto">
-        <Button appearance="link" className="py-2 px-3 h-11" href="/">
+        <Button
+          appearance="link"
+          className="py-2 px-3 h-11"
+          onClick={handleGoMain}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -19,7 +27,11 @@ export const Nav = () => {
             />
           </svg>
         </Button>
-        <Button appearance="link" className="py-2 px-3 h-11" href="/auth/my">
+        <Button
+          appearance="link"
+          className="py-2 px-3 h-11"
+          onClick={handleGoMy}
+        >
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"

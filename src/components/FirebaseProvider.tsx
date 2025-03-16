@@ -21,8 +21,6 @@ export const FirebaseProvider = ({ children }: FirebaseProps) => {
     queryKey: ["my-wallets"],
     enabled: !!user?.uid,
     queryFn: () => getWallets(user?.uid),
-    staleTime: 0,
-    gcTime: 0,
   });
   useLayoutEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user: User | null) => {

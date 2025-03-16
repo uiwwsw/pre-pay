@@ -5,13 +5,9 @@ import { updateWallet } from "#/wallet/updateWallet";
 import { FirebaseContext } from "@/FirebaseContext";
 import { SequentialAnimation } from "@/SequentialAnimation";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import {
-  createFileRoute,
-  useLocation,
-  useRouter,
-} from "@tanstack/react-router";
+import { createFileRoute, useLocation } from "@tanstack/react-router";
 
-import { useContext, useEffect, useMemo, useRef, useState } from "react";
+import { useContext, useMemo, useRef, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   Button,
@@ -36,7 +32,6 @@ function RouteComponent() {
     () => location.pathname.split("/").pop() ?? "",
     [location]
   );
-  const router = useRouter();
   const formstateRef = useRef<FormState>();
   const { user, myWallets } = useContext(FirebaseContext);
   const currentWallet = useMemo(
@@ -99,9 +94,9 @@ function RouteComponent() {
   const ableAmount = useMemo(() => currentWallet?.amount ?? 0, [currentWallet]);
   // console.log(walletsData?.[0]?.created.toDate());
   // const diaplayAmount = useDebounce(numberToKorean(watch("amount")), 1000);
-  useEffect(() => {
-    if (!currentWallet) router.history.back();
-  }, [currentWallet]);
+  // useEffect(() => {
+  //   if (!currentWallet && storeId) router.history.back();
+  // }, [currentWallet, storeId]);
   return (
     <>
       <Modal backdrop="static" open={open} onClose={handleClose}>

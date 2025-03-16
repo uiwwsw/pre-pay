@@ -30,9 +30,8 @@ export const Header = () => {
   const visibleBack = useMemo(() => {
     return location.pathname !== "/" && !visibleClose;
   }, [location, visibleClose]);
-
   return (
-    <header className="fixed backdrop-blur-sm top-0 left-0 right-0 px-10 text-black flex max-w-lg m-auto h-11">
+    <header className="fixed bg-black bg-opacity-30 z-10 backdrop-blur-sm top-0 left-0 right-0 px-10 text-black flex max-w-lg m-auto h-11">
       <div className="flex w-full justify-between self-center">
         <Button
           onClick={handleClick}
@@ -56,7 +55,7 @@ export const Header = () => {
             />
           </svg>
         </Button>
-        <h4 className="text-white self-center">{title}</h4>
+        <h5 className="text-white self-center">{title}</h5>
         <Button
           onClick={handleClick}
           appearance="link"

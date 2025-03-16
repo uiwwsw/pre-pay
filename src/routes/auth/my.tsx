@@ -2,7 +2,7 @@ import { getNew } from "#/log/getNew";
 import { FirebaseContext } from "@/FirebaseContext";
 import { SequentialAnimation } from "@/SequentialAnimation";
 import { useQuery } from "@tanstack/react-query";
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, useRouter } from "@tanstack/react-router";
 import { useContext } from "react";
 import { Badge, Button } from "rsuite";
 
@@ -18,15 +18,27 @@ function RouteComponent() {
     staleTime: 0,
     gcTime: 0,
   });
-
+  const router = useRouter();
+  const handleGoHistory = () => router.history.push("/auth/history");
+  const handleGoStore = () => router.history.push("/auth/store");
   return (
     <SequentialAnimation>
       <Badge content={data?.length}>
-        <Button appearance="primary" className="w-full" href="/auth/history">
+        <Button
+          appearance="primary"
+          className="w-full"
+          type="button"
+          onClick={handleGoHistory}
+        >
           히스토리
         </Button>
       </Badge>
-      <Button appearance="primary" className="w-full" href="/auth/store">
+      <Button
+        appearance="primary"
+        className="w-full"
+        type="button"
+        onClick={handleGoStore}
+      >
         내 상점
       </Button>
     </SequentialAnimation>

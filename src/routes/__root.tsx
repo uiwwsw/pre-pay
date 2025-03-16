@@ -2,6 +2,7 @@
 // import { Float } from "@/Float";
 // import { Nav } from "@/Nav";
 import { Header } from "@/Header";
+import { Nav } from "@/Nav";
 import { createRootRoute, Outlet } from "@tanstack/react-router";
 import { useEffect } from "react";
 // import { Button } from "rsuite";
@@ -25,6 +26,7 @@ const RootComponent = () => {
     <>
       <Header />
       <Outlet />
+      <Nav />
     </>
   );
 };
