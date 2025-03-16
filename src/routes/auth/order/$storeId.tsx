@@ -28,7 +28,7 @@ export const Route = createFileRoute("/auth/order/$storeId")({
 });
 
 interface FormState {
-  amount: number;
+  amount: number | string;
 }
 function RouteComponent() {
   const location = useLocation();
@@ -67,7 +67,7 @@ function RouteComponent() {
     handleSubmit,
     formState: { errors },
     reset,
-  } = useForm<FormState>({ defaultValues: { amount: 0 } });
+  } = useForm<FormState>({ defaultValues: { amount: "" } });
   const onOpen = (data: FormState) => {
     formstateRef.current = data;
 
@@ -77,7 +77,7 @@ function RouteComponent() {
     if (!storeData || !currentWallet || !user) return;
     mutate({
       walletAmount: currentWallet.amount,
-      amount: data.amount,
+      amount: +data.amount,
       confirm: false,
       storeName: storeData.name,
       storeId,
@@ -133,12 +133,13 @@ function RouteComponent() {
               rules={{
                 required: { value: true, message: "금액을 입력해주세요." },
                 validate: (v) =>
-                  (v <= ableAmount && v > 0) || "금액을 확인해주세요.",
+                  (+v <= ableAmount && +v > 0) || "금액을 확인해주세요.",
               }}
               render={({ field }) => (
                 <InputGroup inside>
                   <InputGroup.Addon>₩</InputGroup.Addon>
                   <Input
+                    placeholder="0"
                     value={field.value}
                     type="number"
                     onChange={(value: string) => field.onChange(value)}

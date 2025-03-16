@@ -7,6 +7,8 @@ import { routeTree } from "./routeTree.gen";
 import "rsuite/dist/rsuite.min.css";
 import { CustomProvider } from "rsuite";
 import { FirebaseProvider } from "@/FirebaseProvider";
+import { Nav } from "@/Nav";
+// import { Header } from "@/Header";
 
 const queryClient = new QueryClient();
 const router = createRouter({ routeTree });
@@ -25,6 +27,7 @@ createRoot(document.getElementById("root")!).render(
         <FirebaseProvider>
           <RouterProvider router={router} />
         </FirebaseProvider>
+        <Nav />
       </CustomProvider>
     </QueryClientProvider>
   </StrictMode>

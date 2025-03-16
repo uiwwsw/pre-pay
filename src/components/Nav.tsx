@@ -1,14 +1,9 @@
 import { Button } from "rsuite";
 export const Nav = () => {
   return (
-    <nav
-      className="fixed bottom-0 left-0 right-0 px-10 text-black flex"
-      style={{
-        background: "var(--rs-btn-default-bg)",
-      }}
-    >
+    <nav className="fixed backdrop-blur-sm bottom-0 left-0 right-0 px-10 text-black flex max-w-lg m-auto">
       <div className="flex m-auto">
-        <Button className="py-2 px-3 h-11" href="/">
+        <Button appearance="link" className="py-2 px-3 h-11" href="/">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
@@ -24,7 +19,7 @@ export const Nav = () => {
             />
           </svg>
         </Button>
-        <Button className="py-2 px-3 h-11" href="/auth/my">
+        <Button appearance="link" className="py-2 px-3 h-11" href="/auth/my">
           <svg
             xmlns="http://www.w3.org/2000/svg"
             fill="none"
