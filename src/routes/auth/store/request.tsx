@@ -8,7 +8,7 @@ import { useContext } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { Button, Form, Input, Message, toaster } from "rsuite";
 
-export const Route = createFileRoute("/auth/request")({
+export const Route = createFileRoute("/auth/store/request")({
   component: RouteComponent,
 });
 

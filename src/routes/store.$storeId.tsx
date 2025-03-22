@@ -11,7 +11,7 @@ import {
   useRouter,
 } from "@tanstack/react-router";
 import { useContext, useMemo, useState } from "react";
-import { Button, Modal } from "rsuite";
+import { Button, Message, Modal, toaster } from "rsuite";
 // const { Column, HeaderCell, Cell } = Table;
 
 export const Route = createFileRoute("/store/$storeId")({
@@ -65,6 +65,14 @@ function RouteComponent() {
     setOpen(true);
   };
   const handleApply = () => history.push(`/auth/order/${storeId}`);
+  const handleSubOrder = () => {
+    return toaster.push(
+      <Message showIcon type="warning" closable>
+        개발중입니다.
+      </Message>
+    );
+    history.push(`/auth/store/sub/${storeId}`);
+  };
   useStorage("from", location.pathname);
   // if (isPending) return <Loader className="justify-self-center !flex" />;
   return (
@@ -105,6 +113,9 @@ function RouteComponent() {
             시작하기
           </Button>
         )}
+        <Button onClick={handleSubOrder} appearance="primary" color="green">
+          실시간 주문 받기
+        </Button>
       </SequentialAnimation>
     </>
   );
