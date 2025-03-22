@@ -10,7 +10,7 @@ export const Route = createFileRoute("/oauth")({
   component: RouteComponent,
 });
 function RouteComponent() {
-  const [from] = useStorage<string>("from");
+  const [from, setFrom] = useStorage<string>("from");
   const [cookie, setCookie] = useCookies(["code"]);
   const params = new URL(document.URL).searchParams;
   const code = params.get("code");
@@ -38,6 +38,7 @@ function RouteComponent() {
         </Message>
       );
       router.history.push(from ?? "/");
+      setFrom();
     } else {
       router.history.push("/sign-up");
     }

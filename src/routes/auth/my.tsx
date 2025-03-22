@@ -11,7 +11,7 @@ export const Route = createFileRoute("/auth/my")({
 });
 function RouteComponent() {
   const { user } = useContext(FirebaseContext);
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     enabled: !!user?.uid,
     queryKey: ["notification"],
     queryFn: () => getNew(user!.uid),
@@ -22,7 +22,7 @@ function RouteComponent() {
   const handleGoHistory = () => router.history.push("/auth/history");
   const handleGoStore = () => router.history.push("/auth/store");
   return (
-    <SequentialAnimation>
+    <SequentialAnimation isLoading={isLoading}>
       <Badge content={data?.length}>
         <Button
           appearance="primary"

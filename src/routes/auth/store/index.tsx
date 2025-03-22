@@ -12,13 +12,13 @@ export const Route = createFileRoute("/auth/store/")({
 
 function RouteComponent() {
   const { user } = useContext(FirebaseContext);
-  const { data } = useQuery({
+  const { data, isLoading } = useQuery({
     queryKey: ["stores", user?.uid],
     enabled: !!user?.uid,
     queryFn: () => getStores(user!.uid),
   });
   return (
-    <SequentialAnimation>
+    <SequentialAnimation isLoading={isLoading}>
       <>
         {data?.map((store) => (
           <Button key={store.id} appearance="primary">

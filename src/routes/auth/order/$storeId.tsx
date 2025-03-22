@@ -41,7 +41,7 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const handleClose = () => setOpen(false);
-  const { data: storeData } = useQuery({
+  const { data: storeData, isLoading } = useQuery({
     queryKey: ["store", storeId],
     queryFn: () => getStore(storeId),
     enabled: !!storeId,
@@ -119,7 +119,7 @@ function RouteComponent() {
         </Modal.Footer>
       </Modal>
       <Form>
-        <SequentialAnimation>
+        <SequentialAnimation isLoading={isLoading}>
           <p>사용 가능한 금액: {ableAmount.toLocaleString()}</p>
           <div>
             <Controller

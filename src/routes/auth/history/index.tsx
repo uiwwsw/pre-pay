@@ -31,7 +31,7 @@ function RouteComponent() {
   });
 
   return (
-    <SequentialAnimation>
+    <SequentialAnimation isLoading={isLoading}>
       <Table
         loading={isLoading}
         height={400}

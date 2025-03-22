@@ -23,7 +23,6 @@ function RouteComponent() {
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const location = useLocation();
-  const [from, setFrom] = useStorage("from", location.pathname);
   const storeId = useMemo(
     () => location.pathname.split("/").pop() ?? "",
     [location]
@@ -66,6 +65,7 @@ function RouteComponent() {
     setOpen(true);
   };
   const handleApply = () => history.push(`/auth/order/${storeId}`);
+  useStorage("from", location.pathname);
   // if (isPending) return <Loader className="justify-self-center !flex" />;
   return (
     <>
@@ -86,18 +86,14 @@ function RouteComponent() {
           </Button>
         </Modal.Footer>
       </Modal>
-      <SequentialAnimation>
+      <SequentialAnimation isLoading={isLoading}>
         <dl>
           <dt>상호</dt>
-          <dd className={isLoading ? "bg-white w-24" : ""}>
-            {data?.name ?? "상호"}
-          </dd>
+          <dd>{data?.name}</dd>
         </dl>
         <dl>
           <dt>주소</dt>
-          <dd className={isLoading ? "bg-white w-64" : ""}>
-            {data?.address ?? "주소"}
-          </dd>
+          <dd>{data?.address}</dd>
         </dl>
 
         {currentWallet ? (
