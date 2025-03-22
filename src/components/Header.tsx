@@ -31,7 +31,7 @@ export const Header = () => {
     return location.pathname !== "/" && !visibleClose;
   }, [location, visibleClose]);
   return (
-    <header className="fixed bg-black bg-opacity-30 z-10 backdrop-blur-sm top-0 left-0 right-0 px-10 text-black flex max-w-lg m-auto h-11">
+    <header className="fixed bg-black bg-opacity-30 z-10 backdrop-blur-sm top-0 left-0 right-0 px-3 text-black flex max-w-lg m-auto h-11">
       <div className="flex w-full justify-between self-center">
         <Button
           onClick={handleClick}

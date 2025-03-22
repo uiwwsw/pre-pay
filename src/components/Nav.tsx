@@ -5,12 +5,13 @@ export const Nav = () => {
   const handleGoMain = () => router.history.push("/");
   const handleGoMy = () => router.history.push("/auth/my");
   return (
-    <nav className="fixed bg-black bg-opacity-30 z-10 backdrop-blur-sm bottom-0 left-0 right-0 px-10 text-black flex max-w-lg m-auto">
+    <nav className="fixed bg-black bg-opacity-30 z-10 backdrop-blur-sm bottom-0 left-0 right-0 px-3 text-black flex max-w-lg m-auto">
       <div className="flex m-auto">
         <Button
           appearance="link"
           className="py-2 px-3 h-11"
           onClick={handleGoMain}
+          color="orange"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -31,6 +32,7 @@ export const Nav = () => {
           appearance="link"
           className="py-2 px-3 h-11"
           onClick={handleGoMy}
+          color="orange"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

@@ -3,6 +3,7 @@ import { createWallet } from "#/wallet/createWallet";
 import { Wallet } from "#/wallet/domain";
 import { FirebaseContext } from "@/FirebaseContext";
 import { SequentialAnimation } from "@/SequentialAnimation";
+import { useStorage } from "@/useStorage";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import {
   createFileRoute,
@@ -18,10 +19,11 @@ export const Route = createFileRoute("/store/$storeId")({
 });
 
 function RouteComponent() {
-  const router = useRouter();
+  const { history } = useRouter();
   const queryClient = useQueryClient();
   const [open, setOpen] = useState(false);
   const location = useLocation();
+  const [from, setFrom] = useStorage("from", location.pathname);
   const storeId = useMemo(
     () => location.pathname.split("/").pop() ?? "",
     [location]
@@ -44,7 +46,7 @@ function RouteComponent() {
     [myWallets, storeId]
   );
   const walletName = useMemo(() => `${data?.name}의 지갑`, [data]);
-  const handleStart = async () => {
+  const handleCreateWallet = async () => {
     if (!user || !data) return;
     await mutateAsync({
       amount: 0,
@@ -54,11 +56,16 @@ function RouteComponent() {
       uid: user.uid,
     });
     queryClient.invalidateQueries({ queryKey: ["my-wallets"] });
-    router.history.push(`/auth/order/${storeId}`);
+    history.push(`/auth/order/${storeId}`);
   };
   const handleClose = () => setOpen(false);
-  const handleOpen = () => setOpen(true);
-  const handleApply = () => router.history.push(`/auth/order/${storeId}`);
+  const handleStart = () => {
+    if (!user?.uid) {
+      return history.push("/sign-in");
+    }
+    setOpen(true);
+  };
+  const handleApply = () => history.push(`/auth/order/${storeId}`);
   // if (isPending) return <Loader className="justify-self-center !flex" />;
   return (
     <>
@@ -71,7 +78,7 @@ function RouteComponent() {
           [{walletName}]이라고 만들거에요.
         </Modal.Body>
         <Modal.Footer>
-          <Button onClick={handleStart} appearance="primary">
+          <Button onClick={handleCreateWallet} appearance="primary">
             생성하기
           </Button>
           <Button onClick={handleClose} appearance="subtle">
@@ -98,7 +105,7 @@ function RouteComponent() {
             주문하러 가기
           </Button>
         ) : (
-          <Button onClick={handleOpen} appearance="primary" color="red">
+          <Button onClick={handleStart} appearance="primary" color="red">
             시작하기
           </Button>
         )}

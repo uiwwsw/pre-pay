@@ -5,10 +5,12 @@ import { signInForKakao } from "#/auth/signIn";
 import { Loader, Message, toaster } from "rsuite";
 import { getUser } from "#/user/getUser";
 import { useCookies } from "react-cookie";
+import { useStorage } from "@/useStorage";
 export const Route = createFileRoute("/oauth")({
   component: RouteComponent,
 });
 function RouteComponent() {
+  const [from] = useStorage<string>("from");
   const [cookie, setCookie] = useCookies(["code"]);
   const params = new URL(document.URL).searchParams;
   const code = params.get("code");
@@ -35,10 +37,10 @@ function RouteComponent() {
           로그인 성공! 환영합니다! 💕✨
         </Message>
       );
-      router.history.push("/");
+      router.history.push(from ?? "/");
     } else {
       router.history.push("/sign-up");
     }
-  }, [user, router]);
+  }, [user, router, from]);
   return <Loader className="justify-self-center !flex" />;
 }
