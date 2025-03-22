@@ -23,6 +23,7 @@ function RouteComponent() {
     gcTime: Infinity,
     enabled: !!storeId,
   });
+  console.log(sub);
   return (
     <>
       <SequentialAnimation isLoading={isLoading}>
@@ -34,7 +35,6 @@ function RouteComponent() {
           <dt>주소</dt>
           <dd>{data?.address}</dd>
         </dl>
-        {JSON.stringify(sub)}
       </SequentialAnimation>
     </>
   );
