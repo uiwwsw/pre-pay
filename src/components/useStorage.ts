@@ -9,8 +9,14 @@ export const useStorage = <T>(
 
   const setValue = (value?: T) => {
     try {
-      if (value) storage.setItem(key, JSON.stringify(value));
-      else storage.removeItem(key);
+      let newValue: undefined | string = undefined;
+      if (value) {
+        newValue = JSON.stringify(value);
+        storage.setItem(key, newValue);
+      } else storage.removeItem(key);
+
+      const e: StorageEvent = new StorageEvent("storage", { key, newValue });
+      window.dispatchEvent(e);
     } catch (error) {
       console.error("Error writing to storage", error);
     }
@@ -20,7 +26,6 @@ export const useStorage = <T>(
     try {
       const item = storage.getItem(key);
       if (item) return JSON.parse(item);
-      console.log(initialValue);
       setValue(initialValue);
       return initialValue;
     } catch (error) {
@@ -30,6 +35,7 @@ export const useStorage = <T>(
   });
   useEffect(() => {
     const handleStorageChange = (e: StorageEvent) => {
+      console.log(e.key, e, "dajwkldjawd");
       if (e.key === key) {
         setStoredValue(e.newValue ? JSON.parse(e.newValue) : undefined);
       }

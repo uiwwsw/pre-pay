@@ -21,6 +21,7 @@ import { Route as IndexImport } from './routes/index'
 import { Route as StoreStoreIdImport } from './routes/store.$storeId'
 import { Route as AuthMyImport } from './routes/auth/my'
 import { Route as AdminStoreImport } from './routes/admin/store'
+import { Route as AdminNoticeImport } from './routes/admin/notice'
 import { Route as AuthStoreIndexImport } from './routes/auth/store/index'
 import { Route as AuthHistoryIndexImport } from './routes/auth/history/index'
 import { Route as AuthStoreRequestImport } from './routes/auth/store/request'
@@ -87,6 +88,12 @@ const AuthMyRoute = AuthMyImport.update({
 const AdminStoreRoute = AdminStoreImport.update({
   id: '/store',
   path: '/store',
+  getParentRoute: () => AdminRoute,
+} as any)
+
+const AdminNoticeRoute = AdminNoticeImport.update({
+  id: '/notice',
+  path: '/notice',
   getParentRoute: () => AdminRoute,
 } as any)
 
@@ -179,6 +186,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof SignUpImport
       parentRoute: typeof rootRoute
     }
+    '/admin/notice': {
+      id: '/admin/notice'
+      path: '/notice'
+      fullPath: '/admin/notice'
+      preLoaderRoute: typeof AdminNoticeImport
+      parentRoute: typeof AdminImport
+    }
     '/admin/store': {
       id: '/admin/store'
       path: '/store'
@@ -248,10 +262,12 @@ declare module '@tanstack/react-router' {
 // Create and export the route tree
 
 interface AdminRouteChildren {
+  AdminNoticeRoute: typeof AdminNoticeRoute
   AdminStoreRoute: typeof AdminStoreRoute
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminNoticeRoute: AdminNoticeRoute,
   AdminStoreRoute: AdminStoreRoute,
 }
 
@@ -287,6 +303,7 @@ export interface FileRoutesByFullPath {
   '/oauth': typeof OauthRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/admin/notice': typeof AdminNoticeRoute
   '/admin/store': typeof AdminStoreRoute
   '/auth/my': typeof AuthMyRoute
   '/store/$storeId': typeof StoreStoreIdRoute
@@ -306,6 +323,7 @@ export interface FileRoutesByTo {
   '/oauth': typeof OauthRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/admin/notice': typeof AdminNoticeRoute
   '/admin/store': typeof AdminStoreRoute
   '/auth/my': typeof AuthMyRoute
   '/store/$storeId': typeof StoreStoreIdRoute
@@ -326,6 +344,7 @@ export interface FileRoutesById {
   '/oauth': typeof OauthRoute
   '/sign-in': typeof SignInRoute
   '/sign-up': typeof SignUpRoute
+  '/admin/notice': typeof AdminNoticeRoute
   '/admin/store': typeof AdminStoreRoute
   '/auth/my': typeof AuthMyRoute
   '/store/$storeId': typeof StoreStoreIdRoute
@@ -347,6 +366,7 @@ export interface FileRouteTypes {
     | '/oauth'
     | '/sign-in'
     | '/sign-up'
+    | '/admin/notice'
     | '/admin/store'
     | '/auth/my'
     | '/store/$storeId'
@@ -365,6 +385,7 @@ export interface FileRouteTypes {
     | '/oauth'
     | '/sign-in'
     | '/sign-up'
+    | '/admin/notice'
     | '/admin/store'
     | '/auth/my'
     | '/store/$storeId'
@@ -383,6 +404,7 @@ export interface FileRouteTypes {
     | '/oauth'
     | '/sign-in'
     | '/sign-up'
+    | '/admin/notice'
     | '/admin/store'
     | '/auth/my'
     | '/store/$storeId'
@@ -443,6 +465,7 @@ export const routeTree = rootRoute
     "/admin": {
       "filePath": "admin.tsx",
       "children": [
+        "/admin/notice",
         "/admin/store"
       ]
     },
@@ -469,6 +492,10 @@ export const routeTree = rootRoute
     },
     "/sign-up": {
       "filePath": "sign-up.tsx"
+    },
+    "/admin/notice": {
+      "filePath": "admin/notice.tsx",
+      "parent": "/admin"
     },
     "/admin/store": {
       "filePath": "admin/store.tsx",
